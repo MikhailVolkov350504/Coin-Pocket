@@ -1,28 +1,25 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import sample.View.LoginBox;
+
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
-        LoginBox signUpBox = new LoginBox("Registration", "Sign up");
-        signUpBox.setCallback((email, password) -> {
-            signUpBox.setInfoMessage(false, email + " " +  password);
-        });
+        CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.add(signUpBox, 0, 0);
-
-        primaryStage.setTitle("Sign up");
-        primaryStage.setScene(new Scene(grid, 300, 300));
+        Parent signInView = FXMLLoader.load(getClass().getResource("resources/SignInView.fxml"));
+        primaryStage.setTitle("Sign in");
+        primaryStage.setScene(new Scene(signInView, 400, 300));
         primaryStage.show();
     }
 
