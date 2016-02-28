@@ -1,6 +1,5 @@
 package sample.controller;
 
-import com.google.gson.JsonObject;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -12,13 +11,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sample.model.Constants;
 import sample.model.ServerManager;
-import sample.model.network.RequestCallback;
+import sample.model.network.callback.SignUpCallback;
 
 import java.io.IOException;
 
-public class SignUpController implements RequestCallback {
+public class SignUpController implements SignUpCallback {
 
     public Text infoMessageText;
     public PasswordField passwordField;
@@ -33,25 +31,24 @@ public class SignUpController implements RequestCallback {
 
     public void handleGoBackButtonAction(Event event) {
         Stage window = (Stage) signUpButton.getScene().getWindow();
-        Platform.runLater(() -> this.showSignInScene(window));
+        this.showSignInScene(window);
     }
 
     //Request callback methods
+
     @Override
-    public void success(JsonObject json) {
-
-        Boolean success = json.get(Constants.SUCCESS).getAsBoolean();
-        String message = json.get(success ? Constants.EMAIL : Constants.ERROR_DESCRIPTION).getAsString();
-        Platform.runLater(() -> this.setInfoMessage(!success, message));
-
-        if (success) {
-            Stage window = (Stage) signUpButton.getScene().getWindow();
-            Platform.runLater(() -> this.showSignInScene(window));
-        }
+    public void signUpSucceed(String email) {
+        Stage window = (Stage) signUpButton.getScene().getWindow();
+        this.showSignInScene(window);
     }
 
     @Override
-    public void failure(String errorMessage) {
+    public void singUpFailed(String message) {
+        this.setInfoMessage(true, message);
+    }
+
+    @Override
+    public void errorReceived(String errorMessage) {
         this.setInfoMessage(true, errorMessage);
     }
 

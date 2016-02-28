@@ -1,13 +1,14 @@
-package sample.model.network;
+package sample.model.network.task;
 
 import com.google.gson.JsonObject;
 import sample.model.Utilities;
+import sample.model.network.callback.NetworkTaskCallback;
 
 import java.net.HttpURLConnection;
 
 public class GetTask extends NetworkTask {
 
-    public GetTask(String url, RequestCallback callback) {
+    public GetTask(String url, NetworkTaskCallback callback) {
         super(url, callback, "GET");
     }
 

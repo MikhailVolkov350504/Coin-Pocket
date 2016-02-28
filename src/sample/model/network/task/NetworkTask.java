@@ -1,4 +1,6 @@
-package sample.model.network;
+package sample.model.network.task;
+
+import sample.model.network.callback.NetworkTaskCallback;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -6,10 +8,10 @@ import java.net.URL;
 abstract class NetworkTask implements Runnable {
 
     protected String url;
-    protected RequestCallback callback;
+    protected NetworkTaskCallback callback;
     protected String httpMethod;
 
-    protected NetworkTask(String url, RequestCallback callback, String httpMethod) {
+    protected NetworkTask(String url, NetworkTaskCallback callback, String httpMethod) {
         this.url = url;
         this.callback = callback;
         this.httpMethod = httpMethod;

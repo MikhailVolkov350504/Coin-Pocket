@@ -1,8 +1,5 @@
 package sample.controller;
 
-import com.google.gson.JsonObject;
-
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,15 +10,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import sample.model.Constants;
 import sample.model.ServerManager;
-import sample.model.network.RequestCallback;
 
 import javafx.event.Event;
+import sample.model.network.callback.SignInCallback;
 
-import java.io.IOException;
-
-public class SignInController implements RequestCallback {
+public class SignInController implements SignInCallback {
 
     public TextField emailField;
     public PasswordField passwordField;
@@ -36,37 +30,48 @@ public class SignInController implements RequestCallback {
     }
 
     public void handleSignUpButtonAction(Event actionEvent) {
-        try {
-            Stage window = (Stage)signInButton.getScene().getWindow();
-            this.showSignUpScene(window);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        Stage window = (Stage)signInButton.getScene().getWindow();
+        this.showSignUpScene(window);
     }
 
     //Request callback methods
     @Override
-    public void success(JsonObject json) {
-        Boolean success = json.get(Constants.SUCCESS).getAsBoolean();
-        String message = json.get(success ? Constants.EMAIL : Constants.ERROR_DESCRIPTION).getAsString();
-        Platform.runLater(() -> this.setInfoMessage(!success, message));
+    public void signInSucceed(String email, String token) {
+        Stage window = (Stage) signInButton.getScene().getWindow();
+        this.setInfoMessage(false, email + " " + token);
     }
 
     @Override
-    public void failure(String errorMessage) {
+    public void singInFailed(String message) {
+        this.setInfoMessage(true, message);
+    }
+
+    @Override
+    public void errorReceived(String errorMessage) {
         this.setInfoMessage(true, errorMessage);
+    }
+
+    //Navigation
+    private void showSignUpScene (Stage window) {
+        String title = "Sign up";
+        String fxmlPath = "/sample/resources/SignUpView.fxml";
+        this.showScene(window, fxmlPath, title, 400, 300);
+    }
+
+    private void showScene(Stage window, String resourcePath, String title, int width, int height) {
+        try {
+            Parent scene = FXMLLoader.load(getClass().getResource(resourcePath));
+            window.setScene(new Scene(scene, width, height));
+            window.setTitle(title);
+            window.show();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     //Private methods
     private void setInfoMessage(boolean error, String message) {
         infoMessageText.setFill(error ? Color.FIREBRICK : Color.GREEN);
         infoMessageText.setText(message);
-    }
-
-    private void showSignUpScene (Stage window) throws IOException {
-        Parent signUpView = FXMLLoader.load(getClass().getResource("/sample/resources/SignUpView.fxml"));
-        window.setScene(new Scene(signUpView, 400, 300));
-        window.setTitle("Sign up");
-        window.show();
     }
 }
