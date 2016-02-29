@@ -38,6 +38,7 @@ public class SignInController implements SignInCallback {
     @Override
     public void signInSucceed(String email, String token) {
         Stage window = (Stage) signInButton.getScene().getWindow();
+        showCollectionBoardScene(window);
         this.setInfoMessage(false, email + " " + token);
     }
 
@@ -73,5 +74,11 @@ public class SignInController implements SignInCallback {
     private void setInfoMessage(boolean error, String message) {
         infoMessageText.setFill(error ? Color.FIREBRICK : Color.GREEN);
         infoMessageText.setText(message);
+    }
+
+    private void showCollectionBoardScene (Stage window) {
+        String title = "Collection";
+        String fxmlPath = "/sample/resources/CollectionBoardView.fxml";
+        this.showScene(window, fxmlPath, title, 800, 600);
     }
 }
