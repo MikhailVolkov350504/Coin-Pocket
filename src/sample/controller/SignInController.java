@@ -1,5 +1,6 @@
 package sample.controller;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,11 +23,17 @@ public class SignInController implements SignInCallback {
     public Text infoMessageText;
     public Button signInButton;
 
+    @FXML
+    private Button signUpButton;
+
     //Action handlers
     public void handleSignInButtonAction(Event actionEvent) {
         String email = emailField.getText();
         String password = passwordField.getText();
         ServerManager.signIn(email, password, this);
+        signInButton.setDisable(true);
+        signUpButton.setDisable(true);
+
     }
 
     public void handleSignUpButtonAction(Event actionEvent) {
@@ -45,11 +52,15 @@ public class SignInController implements SignInCallback {
     @Override
     public void singInFailed(String message) {
         this.setInfoMessage(true, message);
+        signInButton.setDisable(false);
+        signUpButton.setDisable(false);
     }
 
     @Override
     public void errorReceived(String errorMessage) {
         this.setInfoMessage(true, errorMessage);
+        signInButton.setDisable(false);
+        signUpButton.setDisable(false);
     }
 
     //Navigation

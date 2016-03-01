@@ -3,8 +3,7 @@ package sample.controller;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import sample.model.ServerManager;
 import sample.model.network.callback.CoinSetsCallback;
 import sample.model.network.callback.CoinsCallback;
@@ -30,21 +29,37 @@ public class CollectionBoardController implements
 //    public ListView countryListView;
 //    public ListView coinSetListView;
 //    public ListView coinListView;
+    public ArrayList<String> coinSetList;
     public ArrayList<String> countriesList;
     public TreeItem<String> currentContinent;
     public int continentsIndex = 0;
 
     @FXML
     private TreeView countryTree;
+    @FXML
+    private Accordion countryTable;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         countriesList = new ArrayList<String>();
+        countryTree.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> System.out.println("selected text " + newValue)));
         ServerManager.getContinents(this);
         setContinents();
-
+        countryTable.getPanes().removeAll();
+//        for(int i = 0;i< 6;i++) {
+//            TitledPane tp = new TitledPane();
+//            tp.setText("" + i);
+//            tp.setContent(new TextArea("abc"));
+//
+//            countryTable.getPanes().add(tp);
+//
+//        }
+//
+//        TitledPane tp = new TitledPane("1234", new Button("Button"));
+//        TitledPane tp2 = new TitledPane("5678", new Button("Button2"));
+//        sectionBox.getChildren().addAll(tp,tp2);
     }
 
     //Actions
@@ -96,7 +111,6 @@ public class CollectionBoardController implements
         for (Country country:countries) {
             countriesList.add(country.getName());
         }
-//        System.out.println(countriesList);
         addCountries();
     }
 
@@ -172,5 +186,8 @@ public class CollectionBoardController implements
 
     }
 
+    public void showCoinsSets(){
+
+    }
 }
 

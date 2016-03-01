@@ -1,7 +1,7 @@
 package sample.controller;
 
-import javafx.application.Platform;
 import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,10 +23,15 @@ public class SignUpController implements SignUpCallback {
     public TextField emailField;
     public Button signUpButton;
 
+    @FXML
+    private Button goBackButton;
+
     public void handleSignUpButtonAction(Event event) {
         String email = emailField.getText();
         String password = passwordField.getText();
         ServerManager.signUp(email, password, this);
+        signUpButton.setDisable(true);
+        goBackButton.setDisable(true);
     }
 
     public void handleGoBackButtonAction(Event event) {
@@ -45,11 +50,15 @@ public class SignUpController implements SignUpCallback {
     @Override
     public void singUpFailed(String message) {
         this.setInfoMessage(true, message);
+        signUpButton.setDisable(false);
+        goBackButton.setDisable(false);
     }
 
     @Override
     public void errorReceived(String errorMessage) {
         this.setInfoMessage(true, errorMessage);
+        signUpButton.setDisable(false);
+        goBackButton.setDisable(false);
     }
 
     //Private methods
