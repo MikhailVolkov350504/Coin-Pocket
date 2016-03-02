@@ -38,8 +38,6 @@ public class CollectionBoardController implements
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        countryTree.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> System.out.println("selected text " + newValue)));
-
         TreeItem<String> root = new TreeItem<>("Continents");
         root.setExpanded(true);
         countryTree.setRoot(root);
@@ -55,39 +53,6 @@ public class CollectionBoardController implements
 //
 //        }
     }
-
-    //Actions
-//    public void continentViewTouched(Event event) {
-//
-//        countryListView.getItems().clear();
-//        coinSetListView.getItems().clear();
-//        coinListView.getItems().clear();
-//
-//        String continentName = (String)continentListView.getSelectionModel().getSelectedItem();
-//        ServerManager.getCountries(continentName, this);
-//    }
-//
-//    public void countryViewTouched(Event event) {
-//
-//        coinSetListView.getItems().clear();
-//        coinListView.getItems().clear();
-//
-//        String countryName = (String)countryListView.getSelectionModel().getSelectedItem();
-//        ServerManager.getCointSets(countryName, this);
-//    }
-//
-//    public void coinSetViewTouched(Event event) {
-//
-//        coinListView.getItems().clear();
-//
-//        String countryName = (String)countryListView.getSelectionModel().getSelectedItem();
-//        String years = (String)coinSetListView.getSelectionModel().getSelectedItem();
-//        ServerManager.getCoins(countryName, years, this);
-//    }
-//
-//    public void coinViewTouched(Event event) {
-//        System.out.println(coinListView.getSelectionModel().getSelectedItem());
-//    }
 
     //Callbacks
     @Override
@@ -124,7 +89,7 @@ public class CollectionBoardController implements
     @Override
     public void coinsReceived(ArrayList<Coin> coins) {
         for (Coin coin:coins) {
-
+            System.out.println(coin.getNominal() + coin.getCurrency());
         }
     }
 

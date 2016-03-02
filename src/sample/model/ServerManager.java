@@ -27,7 +27,7 @@ public class ServerManager {
         JsonObject jsonToSend = new JsonObject();
         jsonToSend.add(Constants.USER, userInfo);
 
-        String url = SERVER_URL + "users";
+        String url = SERVER_URL + "users/sign_up";
         PostTask signUpTask = new PostTask(url, jsonToSend, new NetworkTaskCallback() {
             @Override
             public void success(JsonObject json) {

@@ -13,47 +13,53 @@ public class Parser {
 
     public static ArrayList<Continent> continentsFromJSON(JsonObject json) {
 
-        String[] names = new Gson().fromJson(json.get(Constants.CONTINENT_NAMES), String[].class);
-        ArrayList<Continent> continets = new ArrayList<Continent>();
+        Continent[] continents = new Gson().fromJson(json.get(Constants.CONTINENTS), Continent[].class);
+        ArrayList<Continent> result = new ArrayList();
 
-        for (String name:names) {
-            continets.add(new Continent(name));
+        for (Continent continent : continents) {
+            result.add(continent);
         }
 
-        return continets;
+        return result;
     }
 
     public static ArrayList<Country> countriesFromJSON(JsonObject json) {
 
-        String[] names = new Gson().fromJson(json.get(Constants.COUNTRY_NAMES), String[].class);
-        ArrayList<Country> countries = new ArrayList<Country>();
+        Country[] countries = new Gson().fromJson(json.get(Constants.COUNTRIES), Country[].class);
+        int continentId = json.get(Constants.CONTINENT_ID).getAsInt();
+        ArrayList<Country> result = new ArrayList();
 
-        for (String name:names) {
-            countries.add(new Country(name));
+        for (Country country : countries) {
+            country.setContinentId(continentId);
+            result.add(country);
         }
 
-        return countries;
+        return result;
     }
 
     public static ArrayList<CoinSet> coinSetsFromJSON(JsonObject json) {
 
-        String[] years = new Gson().fromJson(json.get(Constants.COIN_SETS), String[].class);
-        ArrayList<CoinSet> coinSets = new ArrayList<CoinSet>();
+        CoinSet[] coinSets = new Gson().fromJson(json.get(Constants.COIN_SETS), CoinSet[].class);
+        int countryId = json.get(Constants.COUNTRY_ID).getAsInt();
+        ArrayList<CoinSet> result = new ArrayList<CoinSet>();
 
-        for (String year:years) {
-            coinSets.add(new CoinSet(year));
+        for (CoinSet coinSet : coinSets) {
+            coinSet.setCountryId(countryId);
+            result.add(coinSet);
         }
 
-        return coinSets;
+        return result;
     }
 
     public static ArrayList<Coin> coinsFromJSON(JsonObject json) {
 
         Coin[] coins = new Gson().fromJson(json.get(Constants.COINS), Coin[].class);
-        ArrayList<Coin> result = new ArrayList<Coin>();
+        int coinSetId = json.get(Constants.COIN_SET_ID).getAsInt();
+        ArrayList<Coin> result = new ArrayList();
 
         for (Coin coin : coins) {
-             result.add(coin);
+            coin.setCoinSetID(coinSetId);
+            result.add(coin);
         }
 
         return result;
