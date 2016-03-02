@@ -2,6 +2,7 @@ package sample.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,7 +17,10 @@ import sample.model.ServerManager;
 import javafx.event.Event;
 import sample.model.network.callback.SignInCallback;
 
-public class SignInController implements SignInCallback {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class SignInController implements SignInCallback, Initializable {
 
     public TextField emailField;
     public PasswordField passwordField;
@@ -91,5 +95,11 @@ public class SignInController implements SignInCallback {
         String title = "Collection";
         String fxmlPath = "/sample/resources/CollectionBoardView.fxml";
         this.showScene(window, fxmlPath, title, 800, 600);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        emailField.setText("volchik@gmail.com");
+        passwordField.setText("12345678");
     }
 }
