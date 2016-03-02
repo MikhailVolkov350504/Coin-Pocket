@@ -66,7 +66,8 @@ public class CollectionBoardController implements
 
     @Override
     public void countriesReceived(ArrayList<Country> countries) {
-        TreeItem<String> continentItem = (TreeItem)countryTree.getRoot().getChildren().get(continentsIndex++);
+        int itemIndex = countries.get(0).getContinentId() - 1;
+        TreeItem<String> continentItem = (TreeItem)countryTree.getRoot().getChildren().get(itemIndex);
         for (Country country:countries) {
             TreeItem<String> countryItem = new TreeItem<>(country.getName());
 
