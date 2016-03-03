@@ -26,83 +26,86 @@ public class CollectionBoardController implements
         CoinSetsCallback,
         CoinsCallback {
 
-    private int continentsIndex = 0;
+
 
     @FXML
-    private TreeView countryTree;
+    private TreeView treeView;
     @FXML
-    private Accordion countryTable;
+    private Accordion accordion;
+
+    private ArrayList<Continent> continents;
+    private ArrayList<Country> countries;
+    private ArrayList<CoinSet> coinSets;
+
+    private String currentCountryName;
+    private String currentContinentName;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-
         TreeItem<String> root = new TreeItem<>("Continents");
         root.setExpanded(true);
-        countryTree.setRoot(root);
+        treeView.setRoot(root);
 
-        countryTree.getSelectionModel()
+        treeView.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     checkContinents((TreeItem) newValue);
                 });
 
         ServerManager.getContinents(this);
-
-
-
-        countryTable.getPanes().removeAll();
-        for(int i = 0;i< 6;i++) {
-            ListView<String> list = new ListView<String>();
-            ObservableList<String> items = FXCollections.observableArrayList(
-                    "Single", "Double", "Suite", "Family App");
-            list.setItems(items);
-            TitledPane tp = new TitledPane();
-            tp.setText("" + i);
-            tp.setContent(list);
-
-            countryTable.getPanes().add(tp);
-
-        }
     }
 
     //Callbacks
     @Override
     public void continentsReceived(ArrayList<Continent> continents) {
-        for (Continent continent:continents) {
+        this.continents = continents;
+        for (Continent continent : continents) {
             TreeItem<String> continentItem = new TreeItem<>(continent.getName());
-            countryTree.getRoot().getChildren().add(continentItem);
+            treeView.getRoot().getChildren().add(continentItem);
             ServerManager.getCountries(continent.getName(), this);
         }
     }
 
     @Override
     public void countriesReceived(ArrayList<Country> countries) {
+        this.countries = countries;
+        int itemIndex = this.indexOfContinent(countries.get(0).getContinentId());
 
-        int itemIndex = countries.get(0).getContinentId() - 1;
-        TreeItem<String> continentItem = (TreeItem)countryTree.getRoot().getChildren().get(itemIndex);
-        for (Country country:countries) {
+        TreeItem<String> continentItem = (TreeItem) treeView.getRoot().getChildren().get(itemIndex);
+        for (Country country : countries) {
             TreeItem<String> countryItem = new TreeItem<>(country.getName());
-
             continentItem.getChildren().add(countryItem);
         }
-
     }
 
     @Override
     public void coinSetsReceived(ArrayList<CoinSet> sets) {
 
-        for (CoinSet set:sets) {
-            System.out.println(set.getYears());
-        }
+        this.coinSets = sets;
+        accordion.getPanes().removeAll(accordion.getPanes());
 
+        for (CoinSet set : sets) {
+            ServerManager.getCoins(currentCountryName, set.getYears(), this);
+            TitledPane setPane = new TitledPane();
+            setPane.setText(set.getYears());
+            setPane.setContent(new ListView());
+            accordion.getPanes().add(setPane);
+        }
     }
 
     @Override
     public void coinsReceived(ArrayList<Coin> coins) {
-        for (Coin coin:coins) {
-            System.out.println(coin.getNominal() + coin.getCurrency());
+
+        ObservableList items = FXCollections.observableArrayList();
+        for (Coin coin : coins) {
+            items.add(coin.getNominal() + " " + coin.getCurrency());
         }
+
+        int paneIndex = this.indexOfCoinSet(coins.get(0).getCoinSetID());
+        TitledPane pane = accordion.getPanes().get(paneIndex);
+        ListView content = (ListView) pane.getContent();
+        content.getItems().addAll(items);
     }
 
     @Override
@@ -110,18 +113,54 @@ public class CollectionBoardController implements
         System.out.println(errorMessage);
     }
 
-    public  void checkContinents(TreeItem selectedItem){
+    public void checkContinents(TreeItem selectedItem) {
 
-
-        System.out.println(countryTree.getRoot().getValue().toString().equals(selectedItem.getValue().toString()));
-        if(!(countryTree.getRoot().getChildren().contains(selectedItem)) || (countryTree.getRoot().getValue().toString().equals(selectedItem.getValue().toString()))){
-            Country country = new Country(selectedItem.getValue().toString());
-            System.out.println(country.getName());
-            ServerManager.getCointSets(country.getName(), this);
-            System.out.println(country.getName());
-//            System.out.println(selectedItem.getValue());
-
+        if (this.isRootItem(selectedItem)) {
+            return;
         }
+
+        if (this.isContinentItem(selectedItem)) {
+            currentContinentName = selectedItem.getValue().toString();
+            return;
+        }
+
+        String countryName = selectedItem.getValue().toString();
+        currentCountryName = countryName;
+        ServerManager.getCointSets(countryName, this);
+    }
+
+    public boolean isContinentItem(TreeItem selectedItem) {
+        return treeView.getRoot().getChildren().contains(selectedItem);
+    }
+
+    public boolean isRootItem(TreeItem selectedItem) {
+        return treeView.getRoot().getValue().toString().equals(selectedItem.getValue().toString());
+    }
+
+    private int indexOfContinent(int id) {
+        for (Continent continent : continents) {
+            if (continent.getId() == id) {
+                return continents.indexOf(continent);
+            }
+        }
+        return 0;
+    }
+
+    private int indexOfCountry(int id) {
+        for (Country country : countries) {
+            if (country.getId() == id) {
+                return countries.indexOf(country);
+            }
+        }
+        return 0;
+    }
+
+    private int indexOfCoinSet(int id) {
+        for (CoinSet set : coinSets) {
+            if (set.getId() == id) {
+                return coinSets.indexOf(set);
+            }
+        }
+        return 0;
     }
 }
-
