@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import sample.model.ScreenManager;
 import sample.model.ServerManager;
 
 import javafx.event.Event;
@@ -22,22 +23,25 @@ import java.util.ResourceBundle;
 
 public class SignInController implements SignInCallback, Initializable {
 
-    public TextField emailField;
-    public PasswordField passwordField;
-    public Text infoMessageText;
-    public Button signInButton;
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
+    @FXML private Text infoMessageText;
+    @FXML private Button signInButton;
+    @FXML private Button signUpButton;
 
-    @FXML
-    private Button signUpButton;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        emailField.setText("volchik@gmail.com");
+        passwordField.setText("12345678");
+    }
 
     //Action handlers
     public void handleSignInButtonAction(Event actionEvent) {
+        signInButton.setDisable(true);
+        signUpButton.setDisable(true);
         String email = emailField.getText();
         String password = passwordField.getText();
         ServerManager.signIn(email, password, this);
-        signInButton.setDisable(true);
-        signUpButton.setDisable(true);
-
     }
 
     public void handleSignUpButtonAction(Event actionEvent) {
@@ -67,39 +71,22 @@ public class SignInController implements SignInCallback, Initializable {
         signUpButton.setDisable(false);
     }
 
-    //Navigation
-    private void showSignUpScene (Stage window) {
-        String title = "Sign up";
-        String fxmlPath = "/sample/resources/SignUpView.fxml";
-        this.showScene(window, fxmlPath, title, 400, 300);
-    }
-
-    private void showScene(Stage window, String resourcePath, String title, int width, int height) {
-        try {
-            Parent scene = FXMLLoader.load(getClass().getResource(resourcePath));
-            window.setScene(new Scene(scene, width, height));
-            window.setTitle(title);
-            window.show();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     //Private methods
     private void setInfoMessage(boolean error, String message) {
         infoMessageText.setFill(error ? Color.FIREBRICK : Color.GREEN);
         infoMessageText.setText(message);
     }
 
+    //Navigation
+    private void showSignUpScene (Stage window) {
+        String title = "Sign up";
+        String fxmlPath = "/sample/resources/SignUpView.fxml";
+        ScreenManager.getInstance().showScene(window, fxmlPath, title, 400, 300);
+    }
+
     private void showCollectionBoardScene (Stage window) {
         String title = "Collection";
         String fxmlPath = "/sample/resources/CollectionBoardView.fxml";
-        this.showScene(window, fxmlPath, title, 800, 600);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        emailField.setText("volchik@gmail.com");
-        passwordField.setText("12345678");
+        ScreenManager.getInstance().showScene(window, fxmlPath, title, 400, 300);
     }
 }

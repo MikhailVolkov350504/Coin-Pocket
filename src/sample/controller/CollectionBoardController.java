@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import sample.model.DataManager;
 import sample.model.ServerManager;
 import sample.model.network.callback.CoinSetsCallback;
 import sample.model.network.callback.CoinsCallback;
@@ -26,32 +28,39 @@ public class CollectionBoardController implements
         CoinSetsCallback,
         CoinsCallback {
 
-
-
-    @FXML
-    private TreeView treeView;
-    @FXML
-    private Accordion accordion;
-
-    private ArrayList<Continent> continents;
-    private ArrayList<Country> countries;
-    private ArrayList<CoinSet> coinSets;
+    @FXML private TreeView treeView;
+    @FXML private Accordion accordion;
 
     private String currentCountryName;
     private String currentContinentName;
+    private DataManager dataManager;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        dataManager = new DataManager();
 
         TreeItem<String> root = new TreeItem<>("Continents");
         root.setExpanded(true);
         treeView.setRoot(root);
 
-        treeView.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    checkContinents((TreeItem) newValue);
-                });
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            TreeItem selectedItem = (TreeItem) newValue;
+
+            if (this.isRootItem(selectedItem)) {
+                return;
+            }
+
+            if (this.isContinentItem(selectedItem)) {
+                currentContinentName = selectedItem.getValue().toString();
+                return;
+            }
+
+            String countryName = selectedItem.getValue().toString();
+            currentCountryName = countryName;
+            ServerManager.getCointSets(countryName, this);
+        });
 
         ServerManager.getContinents(this);
     }
@@ -59,7 +68,8 @@ public class CollectionBoardController implements
     //Callbacks
     @Override
     public void continentsReceived(ArrayList<Continent> continents) {
-        this.continents = continents;
+        dataManager.setContinents(continents);
+        currentContinentName = continents.get(0).getName();
         for (Continent continent : continents) {
             TreeItem<String> continentItem = new TreeItem<>(continent.getName());
             treeView.getRoot().getChildren().add(continentItem);
@@ -69,12 +79,19 @@ public class CollectionBoardController implements
 
     @Override
     public void countriesReceived(ArrayList<Country> countries) {
-        this.countries = countries;
-        int itemIndex = this.indexOfContinent(countries.get(0).getContinentId());
+        dataManager.setCountries(countries);
+        int continentIndex = dataManager.indexOfContinent(countries.get(0).getContinentId());
+        String continentName = dataManager.getContinents().get(continentIndex).getName();
+        TreeItem<String> continentItem = (TreeItem) treeView.getRoot().getChildren().get(continentIndex);
 
-        TreeItem<String> continentItem = (TreeItem) treeView.getRoot().getChildren().get(itemIndex);
         for (Country country : countries) {
-            TreeItem<String> countryItem = new TreeItem<>(country.getName());
+
+            String flagPath = this.flagPath(continentName, country.getName());
+            ImageView imageView = new ImageView(flagPath);
+            imageView.setFitHeight(20);
+            imageView.setFitWidth(30);
+
+            TreeItem<String> countryItem = new TreeItem<>(country.getName(), imageView);
             continentItem.getChildren().add(countryItem);
         }
     }
@@ -82,7 +99,7 @@ public class CollectionBoardController implements
     @Override
     public void coinSetsReceived(ArrayList<CoinSet> sets) {
 
-        this.coinSets = sets;
+        dataManager.setCoinSets(sets);
         accordion.getPanes().removeAll(accordion.getPanes());
 
         for (CoinSet set : sets) {
@@ -102,7 +119,7 @@ public class CollectionBoardController implements
             items.add(coin.getNominal() + " " + coin.getCurrency());
         }
 
-        int paneIndex = this.indexOfCoinSet(coins.get(0).getCoinSetID());
+        int paneIndex = dataManager.indexOfCoinSet(coins.get(0).getCoinSetID());
         TitledPane pane = accordion.getPanes().get(paneIndex);
         ListView content = (ListView) pane.getContent();
         content.getItems().addAll(items);
@@ -113,54 +130,16 @@ public class CollectionBoardController implements
         System.out.println(errorMessage);
     }
 
-    public void checkContinents(TreeItem selectedItem) {
-
-        if (this.isRootItem(selectedItem)) {
-            return;
-        }
-
-        if (this.isContinentItem(selectedItem)) {
-            currentContinentName = selectedItem.getValue().toString();
-            return;
-        }
-
-        String countryName = selectedItem.getValue().toString();
-        currentCountryName = countryName;
-        ServerManager.getCointSets(countryName, this);
-    }
-
-    public boolean isContinentItem(TreeItem selectedItem) {
+    //PRIVATE METHODS
+    private boolean isContinentItem(TreeItem selectedItem) {
         return treeView.getRoot().getChildren().contains(selectedItem);
     }
 
-    public boolean isRootItem(TreeItem selectedItem) {
+    private boolean isRootItem(TreeItem selectedItem) {
         return treeView.getRoot().getValue().toString().equals(selectedItem.getValue().toString());
     }
 
-    private int indexOfContinent(int id) {
-        for (Continent continent : continents) {
-            if (continent.getId() == id) {
-                return continents.indexOf(continent);
-            }
-        }
-        return 0;
-    }
-
-    private int indexOfCountry(int id) {
-        for (Country country : countries) {
-            if (country.getId() == id) {
-                return countries.indexOf(country);
-            }
-        }
-        return 0;
-    }
-
-    private int indexOfCoinSet(int id) {
-        for (CoinSet set : coinSets) {
-            if (set.getId() == id) {
-                return coinSets.indexOf(set);
-            }
-        }
-        return 0;
+    private String flagPath(String continentName, String countryName) {
+        return  "file:Images/" + continentName + "/" + countryName + "@2x.png";
     }
 }

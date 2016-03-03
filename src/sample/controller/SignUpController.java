@@ -8,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sample.model.ScreenManager;
 import sample.model.ServerManager;
 import sample.model.network.callback.SignUpCallback;
 
@@ -18,13 +20,11 @@ import java.io.IOException;
 
 public class SignUpController implements SignUpCallback {
 
-    public Text infoMessageText;
-    public PasswordField passwordField;
-    public TextField emailField;
-    public Button signUpButton;
-
-    @FXML
-    private Button goBackButton;
+    @FXML private Text infoMessageText;
+    @FXML private PasswordField passwordField;
+    @FXML private TextField emailField;
+    @FXML private Button signUpButton;
+    @FXML private Button goBackButton;
 
     public void handleSignUpButtonAction(Event event) {
         String email = emailField.getText();
@@ -40,7 +40,6 @@ public class SignUpController implements SignUpCallback {
     }
 
     //Request callback methods
-
     @Override
     public void signUpSucceed(String email) {
         Stage window = (Stage) signUpButton.getScene().getWindow();
@@ -67,14 +66,9 @@ public class SignUpController implements SignUpCallback {
         infoMessageText.setText(message);
     }
 
-    private void showSignInScene (Stage window) {
-        try {
-            Parent signUpView = FXMLLoader.load(getClass().getResource("/sample/resources/SignInView.fxml"));
-            window.setScene(new Scene(signUpView, 400, 300));
-            window.setTitle("Sign in");
-            window.show();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+    private void showSignInScene(Stage window) {
+        String title = "Sign in";
+        String fxmlPath =  "/sample/resources/SignInView.fxml";
+        ScreenManager.getInstance().showScene(window, fxmlPath, title, 400, 300);
     }
 }
