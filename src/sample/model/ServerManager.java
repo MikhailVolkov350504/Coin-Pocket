@@ -146,7 +146,7 @@ public class ServerManager {
 
     public static void getCointSets(String countryName, CoinSetsCallback callback) {
 
-        String url = SERVER_URL + "coins/coin_sets?name=" + countryName;
+        String url = SERVER_URL + "coins/coin_sets?country_name=" + countryName;
         GetTask getCoinSetsTask = new GetTask(url, new NetworkTaskCallback() {
             @Override
             public void success(JsonObject json) {
