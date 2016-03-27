@@ -123,6 +123,10 @@ public class CollectionBoardController implements
         TitledPane pane = accordion.getPanes().get(paneIndex);
         ListView content = (ListView) pane.getContent();
         content.getItems().addAll(items);
+
+        content.setOnMouseClicked(event -> {
+            CoinWindowController.display("CoinNominal", "CoinCurrency");
+        });
     }
 
     @Override
