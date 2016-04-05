@@ -27,6 +27,7 @@ public class ScreenManager {
             Parent view = FXMLLoader.load(getClass().getResource(path));
             window.setScene(new Scene(view, width, height));
             window.setTitle(title);
+            window.centerOnScreen();
             window.show();
         } catch (IOException e) {
             System.out.println(e.getMessage());

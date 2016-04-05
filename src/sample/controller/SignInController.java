@@ -3,6 +3,7 @@ package sample.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -10,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import sample.model.ScreenManager;
@@ -87,6 +89,11 @@ public class SignInController implements SignInCallback, Initializable {
     private void showCollectionBoardScene (Stage window) {
         String title = "Collection";
         String fxmlPath = "/sample/resources/CollectionBoardView.fxml";
-        ScreenManager.getInstance().showScene(window, fxmlPath, title, 400, 300);
+        ScreenManager.getInstance().showScene(
+                window,
+                fxmlPath,
+                title,
+                1000,
+                800);
     }
 }
