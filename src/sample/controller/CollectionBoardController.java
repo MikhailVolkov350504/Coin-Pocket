@@ -34,6 +34,7 @@ public class CollectionBoardController implements
 
     @FXML private TreeView treeView;
     @FXML private Accordion accordion;
+    @FXML private ProgressIndicator activityIndicator;
 
     private String currentCountryName;
     private String currentContinentName;
@@ -63,6 +64,10 @@ public class CollectionBoardController implements
 
             String countryName = selectedItem.getValue().toString();
             currentCountryName = countryName;
+
+            accordion.getPanes().removeAll(accordion.getPanes());
+            activityIndicator.setVisible(true);
+
             ServerManager.getCointSets(countryName, this);
         });
 
@@ -103,8 +108,8 @@ public class CollectionBoardController implements
     @Override
     public void coinSetsReceived(ArrayList<CoinSet> sets) {
 
+        activityIndicator.setVisible(false);
         dataManager.setCoinSets(sets);
-        accordion.getPanes().removeAll(accordion.getPanes());
 
         for (CoinSet set : sets) {
             ServerManager.getCoins(currentCountryName, set.getYears(), this);

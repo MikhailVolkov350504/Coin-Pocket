@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -16,6 +17,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <Accordion fx:id="accordion" layoutX="14.0" layoutY="14.0" prefHeight="371.0" prefWidth="394.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ProgressIndicator fx:id="activityIndicator" layoutX="100.0" layoutY="100.0" maxHeight="44.0" maxWidth="44.0" minHeight="30.0" minWidth="30.0" prefHeight="30.0" prefWidth="30.0" scaleX="0.1" scaleY="0.1" scaleZ="0.1" visible="false" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="100.0" />
                </children>
             </AnchorPane>
         </items>
