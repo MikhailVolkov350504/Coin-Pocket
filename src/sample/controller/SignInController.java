@@ -111,6 +111,6 @@ public class SignInController implements SignInCallback, Initializable {
     private void showCollectionBoardScene (Stage window) {
         String title = "Collection";
         String fxmlPath = "/sample/resources/CollectionBoardView.fxml";
-        ScreenManager.getInstance().showScene(window, fxmlPath, title, 1000, 800);
+        ScreenManager.getInstance().showScene(window, fxmlPath, title, 800, 600);
     }
 }

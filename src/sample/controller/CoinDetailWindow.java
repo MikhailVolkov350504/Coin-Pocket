@@ -3,19 +3,12 @@ package sample.controller;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.RadialGradientBuilder;
-import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import sample.model.object.Coin;
-
-import javax.swing.border.Border;
 
 public class CoinDetailWindow {
 
@@ -27,10 +20,10 @@ public class CoinDetailWindow {
 
         window = new Stage();
 
-        String imagePath = "file:Images/" + continentName + "/" + countryName + "@2x.png";;
+        String imagePath = "file:Images/coin.jpg";;
         ImageView imageView = new ImageView(imagePath);
-        imageView.setFitHeight(50);
-        imageView.setFitWidth(70);
+        imageView.setFitHeight(230);
+        imageView.setFitWidth(400);
         HBox hBox = new HBox();
         hBox.getChildren().add(imageView);
         hBox.setAlignment(Pos.CENTER);
@@ -38,12 +31,6 @@ public class CoinDetailWindow {
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(true);
         checkBox.setText("is in collection");
-
-        Button closeButton = new Button();
-        closeButton.setText("Close");
-        closeButton.setOnAction(event -> {
-            window.close();
-        });
 
         Label currencyLabel = new Label();
         currencyLabel.setText("Currency:");
@@ -62,7 +49,6 @@ public class CoinDetailWindow {
 
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
-        pane.setStyle("-fx-background-color: gray");
         pane.setPadding(new Insets(10, 10, 10, 10));
         pane.setVgap(10);
         pane.setHgap(10);
@@ -74,12 +60,11 @@ public class CoinDetailWindow {
         pane.add(locationLabel,0,3);
         pane.add(locationValueLabel,1,3);
         pane.add(checkBox, 0, 4, 2, 1);
-        pane.add(closeButton, 0, 5, 2, 1);
 
         BorderPane scene = new BorderPane();
         scene.setCenter(pane);
 
-        window.setScene(new Scene(scene, 300, 300));
+        window.setScene(new Scene(scene));
         window.setTitle("Coin info");
         window.setResizable(false);
         window.centerOnScreen();

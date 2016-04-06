@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
@@ -35,6 +36,7 @@ public class CollectionBoardController implements
     @FXML private TreeView treeView;
     @FXML private Accordion accordion;
     @FXML private ProgressIndicator activityIndicator;
+    @FXML private PieChart chart;
 
     private String currentCountryName;
     private String currentContinentName;
@@ -44,6 +46,8 @@ public class CollectionBoardController implements
     public void initialize(URL location, ResourceBundle resources) {
 
         dataManager = new DataManager();
+
+        chart.setData(getChartData());
 
         TreeItem<String> root = new TreeItem<>("Continents");
         root.setExpanded(true);
@@ -156,5 +160,16 @@ public class CollectionBoardController implements
 
     private String flagPath(String continentName, String countryName) {
         return  "file:Images/" + continentName + "/" + countryName + "@2x.png";
+    }
+
+    private ObservableList<PieChart.Data> getChartData() {
+        ObservableList<PieChart.Data> answer = FXCollections.observableArrayList();
+        answer.addAll(
+                new PieChart.Data("Europe", 17.56),
+                new PieChart.Data("Asia", 31.37),
+                new PieChart.Data("Australia", 31.37),
+                new PieChart.Data("North America", 31.37),
+                new PieChart.Data("Latin America", 31.37));
+        return answer;
     }
 }
