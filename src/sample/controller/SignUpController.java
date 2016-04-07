@@ -73,7 +73,6 @@ public class SignUpController implements SignUpCallback, Initializable {
     }
 
     //Private methods
-
     private void enableUI(String message) {
         this.setInfoMessage(true, message);
         activityIndicator.setVisible(false);

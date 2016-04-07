@@ -1,0 +1,31 @@
+.button:hover {
+    -fx-background-color:#34CEBE;
+    -fx-text-fill:#FFFFFF;
+}
+.root {
+    -fx-background-color: #ffffff;
+}
+.button {
+    -fx-border-color:#34CEBE;
+    -fx-background-color:#FFFFFF;
+    -fx-text-fill:#34CEBE;
+}
+
+#mainTitleLabel {
+    -fx-font-size: 40px;
+    -fx-text-fill: #69C4BF;
+    -fx-font-family: Helvetica;
+    -fx-font-weight: Lighter;
+}
+
+#treeView .tree-cell:focused {
+    -fx-background-color : #34CEBE;
+}
+
+#treeView:focused .table-row-cell:filled:focused:selected{
+    -fx-background-color : #34CEBE;
+}
+
+#activityIndicator {
+   -fx-progress-color: #34CEBE;
+}
